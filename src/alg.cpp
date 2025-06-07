@@ -12,3 +12,4 @@ int eval(const std::string& pref) {
   // добавьте код
   return 0;
 }
+
