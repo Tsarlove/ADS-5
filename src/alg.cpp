@@ -30,7 +30,8 @@ std::string infx2pstfx(const std::string& inf) {
         stack.pop();
       }
       if (!stack.empty()) stack.pop();
-    } else if (inf[i] == '+'  inf[i] == '-'  inf[i] == '*' || inf[i] == '/') {
+    } else if (inf[i] == '+'  inf[i] == '-' 
+               inf[i] == '*' || inf[i] == '/') {
       while (!stack.empty() && priority(stack.top()) >= priority(inf[i])) {
         res += stack.top();
         res += ' ';
@@ -53,16 +54,27 @@ int eval(const std::string& post) {
   std::istringstream iss(post);
   std::string token;
   while (iss >> token) {
-    if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1 && isdigit(token[1]))) {
+    if (isdigit(token[0]) ||
+        (token[0] == '-' && token.length() > 1 && isdigit(token[1]))) {
       stack.push(std::stoi(token));
     } else {
-      int b = stack.top(); stack.pop();
-      int a = stack.top(); stack.pop();
+      int b = stack.top();
+      stack.pop();
+      int a = stack.top();
+      stack.pop();
       switch (token[0]) {
-        case '+': stack.push(a + b); break;
-        case '-': stack.push(a - b); break;
-        case '*': stack.push(a * b); break;
-        case '/': stack.push(a / b); break;
+        case '+':
+          stack.push(a + b);
+          break;
+        case '-':
+          stack.push(a - b);
+          break;
+        case '*':
+          stack.push(a * b);
+          break;
+        case '/':
+          stack.push(a / b);
+          break;
       }
     }
   }
