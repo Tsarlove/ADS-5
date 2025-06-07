@@ -53,7 +53,7 @@ int eval(const std::string& post) {
   std::istringstream iss(post);
   std::string token;
   while (iss >> token) {
-    if (isdigit(token[0]) || (token.size() > 1 && isdigit(token[1]))) {
+    if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1 && isdigit(token[1]))) {
       stack.push(std::stoi(token));
     } else {
       int b = stack.top(); stack.pop();
