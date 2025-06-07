@@ -67,7 +67,7 @@ int eval(const std::string& postfix) {
         (token[0] == '-' && token.size() > 1 && isdigit(token[1]))) {
       stack.push(std::stoi(token));
     } else if (token.size() == 1 && isOperator(token[0])) {
-      if (stack.size() < 2) continue;  // Avoid underflow
+      if (stack.size() < 2) continue;
       int b = stack.top(); stack.pop();
       int a = stack.top(); stack.pop();
 
