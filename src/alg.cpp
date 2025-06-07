@@ -10,9 +10,14 @@ int priority(char op) {
   return 0;
 }
 
+bool isOperator(char ch) {
+  return ch == '+'  ch == '-'  ch == '*' || ch == '/';
+}
+
 std::string infx2pstfx(const std::string& input) {
   std::stack<char> stack;
   std::string result;
+
   for (size_t i = 0; i < input.length(); ++i) {
     char ch = input[i];
 
@@ -32,7 +37,7 @@ std::string infx2pstfx(const std::string& input) {
         stack.pop();
       }
       if (!stack.empty()) stack.pop();
-    } else if (ch == '+'  ch == '-'  ch == '*' || ch == '/') {
+    } else if (isOperator(ch)) {
       while (!stack.empty() && priority(stack.top()) >= priority(ch)) {
         result += stack.top();
         result += ' ';
@@ -61,12 +66,10 @@ int eval(const std::string& postfix) {
     if (isdigit(token[0]) ||
         (token[0] == '-' && token.size() > 1 && isdigit(token[1]))) {
       stack.push(std::stoi(token));
-    } else {
+    } else if (token.size() == 1 && isOperator(token[0])) {
       if (stack.size() < 2) continue;  // Avoid underflow
-      int b = stack.top();
-      stack.pop();
-      int a = stack.top();
-      stack.pop();
+      int b = stack.top(); stack.pop();
+      int a = stack.top(); stack.pop();
 
       switch (token[0]) {
         case '+': stack.push(a + b); break;
@@ -76,5 +79,6 @@ int eval(const std::string& postfix) {
       }
     }
   }
+
   return stack.empty() ? 0 : stack.top();
 }
