@@ -11,7 +11,7 @@ int priority(char op) {
 }
 
 bool isOperator(char ch) {
-  return ch == '+'  ch == '-'  ch == '*' || ch == '/';
+  return ch == '+' || ch == '-' || ch == '*' || ch == '/';
 }
 
 std::string infx2pstfx(const std::string& input) {
