@@ -10,73 +10,71 @@ int priority(char op) {
   return 0;
 }
 
-std::string infx2pstfx(const std::string& inf) {
+std::string infx2pstfx(const std::string& input) {
   std::stack<char> stack;
-  std::string res;
-  for (size_t i = 0; i < inf.size(); ++i) {
-    if (isdigit(inf[i])) {
-      while (i < inf.size() && isdigit(inf[i])) {
-        res += inf[i];
+  std::string result;
+  for (size_t i = 0; i < input.length(); ++i) {
+    char ch = input[i];
+
+    if (isdigit(ch)) {
+      while (i < input.length() && isdigit(input[i])) {
+        result += input[i];
         ++i;
       }
-      res += ' ';
+      result += ' ';
       --i;
-    } else if (inf[i] == '(') {
-      stack.push('(');
-    } else if (inf[i] == ')') {
+    } else if (ch == '(') {
+      stack.push(ch);
+    } else if (ch == ')') {
       while (!stack.empty() && stack.top() != '(') {
-        res += stack.top();
-        res += ' ';
+        result += stack.top();
+        result += ' ';
         stack.pop();
       }
       if (!stack.empty()) stack.pop();
-    } else if (inf[i] == '+'  inf[i] == '-' 
-               inf[i] == '*' || inf[i] == '/') {
-      while (!stack.empty() && priority(stack.top()) >= priority(inf[i])) {
-        res += stack.top();
-        res += ' ';
+    } else if (ch == '+'  ch == '-'  ch == '*' || ch == '/') {
+      while (!stack.empty() && priority(stack.top()) >= priority(ch)) {
+        result += stack.top();
+        result += ' ';
         stack.pop();
       }
-      stack.push(inf[i]);
+      stack.push(ch);
     }
   }
+
   while (!stack.empty()) {
-    res += stack.top();
-    res += ' ';
+    result += stack.top();
+    result += ' ';
     stack.pop();
   }
-  if (!res.empty() && res.back() == ' ') res.pop_back();
-  return res;
+
+  if (!result.empty() && result.back() == ' ') result.pop_back();
+  return result;
 }
 
-int eval(const std::string& post) {
+int eval(const std::string& postfix) {
   std::stack<int> stack;
-  std::istringstream iss(post);
+  std::istringstream iss(postfix);
   std::string token;
+
   while (iss >> token) {
     if (isdigit(token[0]) ||
-        (token[0] == '-' && token.length() > 1 && isdigit(token[1]))) {
+        (token[0] == '-' && token.size() > 1 && isdigit(token[1]))) {
       stack.push(std::stoi(token));
     } else {
+      if (stack.size() < 2) continue;  // Avoid underflow
       int b = stack.top();
       stack.pop();
       int a = stack.top();
       stack.pop();
+
       switch (token[0]) {
-        case '+':
-          stack.push(a + b);
-          break;
-        case '-':
-          stack.push(a - b);
-          break;
-        case '*':
-          stack.push(a * b);
-          break;
-        case '/':
-          stack.push(a / b);
-          break;
+        case '+': stack.push(a + b); break;
+        case '-': stack.push(a - b); break;
+        case '*': stack.push(a * b); break;
+        case '/': stack.push(a / b); break;
       }
     }
   }
-  return stack.top();
+  return stack.empty() ? 0 : stack.top();
 }
