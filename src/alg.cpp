@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 #include <cctype>
-#include "tstack.h"
+#include <stack>
 
 int priority(char op) {
   if (op == '+' || op == '-') return 1;
@@ -11,7 +11,7 @@ int priority(char op) {
 }
 
 std::string infx2pstfx(const std::string& inf) {
-  TStack<char, 100> stack;
+  std::stack<char> stack;
   std::string res;
   for (size_t i = 0; i < inf.size(); ++i) {
     if (isdigit(inf[i])) {
@@ -49,11 +49,11 @@ std::string infx2pstfx(const std::string& inf) {
 }
 
 int eval(const std::string& post) {
-  TStack<int, 100> stack;
+  std::stack<int> stack;
   std::istringstream iss(post);
   std::string token;
   while (iss >> token) {
-    if (isdigit(token[0])) {
+    if (isdigit(token[0]) || (token.size() > 1 && isdigit(token[1]))) {
       stack.push(std::stoi(token));
     } else {
       int b = stack.top(); stack.pop();
